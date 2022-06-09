@@ -82,12 +82,5 @@ def jsonProductLink(s=0):
     return url
 
 
-def test():
-    l = num_found()
-    for i, e in tqdm(range(l), total=num_found()):
-        time.sleep(1)
-        print(i)
-
-
 if __name__ == '__main__':
     writeJsonData()
