@@ -27,7 +27,7 @@ def productData():
     i = getUrl.num_found()
     try:
         # while s <= i:
-        for s in tqdm(range(i), desc='loading...', colour='#00ff0a'):
+        for s in tqdm(range(3), desc='loading...', colour='#00ff0a'):
             url = jsonData(s)[0]
             page = pageSource(url)
             # print(url)
@@ -105,9 +105,7 @@ def productData():
     except IndexError:
         pass
 
-    js = json.dumps(dizi, ensure_ascii=False, indent=4)
-    with open("products.json", "w", encoding='utf-8') as outfile:
-        outfile.write(js)
+    getUrl.jsonWrite(fname='', data=dizi)
 
 
 if __name__ == '__main__':

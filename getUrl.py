@@ -27,10 +27,10 @@ def getJsonData():
     return 'Success Full'
 
 
-def writeJsonData():
+def productData():
     base_url = 'https://www.grohe.com.tr/tr_tr/'
     # s = [200, 240]
-    bar = tqdm(range(num_found()), colour='#18f763', unit=' loading...')
+    bar = tqdm(range(4), colour='#18f763', unit=' loading...')
     dizi = []
     for s in bar:
 
@@ -70,20 +70,17 @@ def writeJsonData():
         # print(s, ':', products)
 
         bar.set_description(product_code)
-
-    js = json.dumps(dizi, ensure_ascii=False, indent=4)
-
-    with open("test.json", "w", encoding='utf-8') as outfile:
-        outfile.write(js)
+    jsonWrite('', dizi)
     print(dizi)
 
 
-def jsonProductLink(s=0):
-    f = open('test.json', encoding='utf-8')
-    data = json.load(f)
-    url = data['products'][s]['url']
-    return url
+# fname -> Specify new filename
+def jsonWrite(fname, data):
+    js = json.dumps(data, ensure_ascii=False, indent=4)
+
+    with open(f"{fname}.json", "w", encoding='utf-8') as outfile:
+        outfile.write(js)
 
 
 if __name__ == '__main__':
-    writeJsonData()
+    productData()
