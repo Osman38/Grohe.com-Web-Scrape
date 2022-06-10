@@ -1,6 +1,5 @@
 import json
 import time
-
 import requests
 import ast
 import urllib.parse
@@ -9,7 +8,7 @@ from tqdm import tqdm
 
 
 def main_url(limit=1000, rows=1, start=0):
-    url = f'https://www.grohe.com.tr/solr/master_tr_TR_Product/select?defType=edismax&facet.limit={limit}&facet.mincount=1&facet.query=bim:*&facet.query=-bim:*&fl=modelName,communicationDesign,pl_displayName,code&fq=(b2cAssortment:true OR b2bAssortment:true) AND category:Washbasin&indent=true&q=*:*&qf=code^40.0 communicationDesign^20.0 fulltext webSiteEndUserShort claim&rows={rows}&sort=pl_displayName asc&start={start}&wt=json'
+    url = f'https://www.grohe.com.tr/solr/master_tr_TR_Product/select?defType=edismax&facet.limit={limit}&facet.mincount=1&facet.query=bim:*&facet.query=-bim:*&fl=modelName,category,communicationDesign,pl_displayName,code&fq=(b2cAssortment:true OR b2bAssortment:true) AND category:Washbasin&indent=true&q=*:*&qf=code^40.0 communicationDesign^20.0 fulltext webSiteEndUserShort claim&rows={rows}&sort=pl_displayName asc&start={start}&wt=json'
     return url
 
 
@@ -31,14 +30,15 @@ def getJsonData():
 def writeJsonData():
     base_url = 'https://www.grohe.com.tr/tr_tr/'
     # s = [200, 240]
-    bar = num_found() - 1
+    bar = tqdm(range(num_found()), colour='#18f763', unit=' loading...')
     dizi = []
-    for s in tqdm(range(bar), colour='#18f763'):
+    for s in bar:
 
         products = {
             'index': '',
             'displayName': '',
             'modelName': '',
+            'categories': '',
             'code': '',
             'url': ''
         }
@@ -52,7 +52,7 @@ def writeJsonData():
                 serial_name = x['pl_displayName'].replace(' ', '-')
             except KeyError:
                 serial_name = ''
-
+        product_categories = x['category']
         product_name = x['modelName']
         name_url = urllib.parse.quote(x['modelName'], safe="'")
 
@@ -63,20 +63,23 @@ def writeJsonData():
         products['index'] = s
         products['displayName'] = serial_name
         products['modelName'] = product_name
+        products['categories'] = product_categories
         products['code'] = product_code
         products['url'] = urllib.parse.quote(url, safe='://')
         dizi.append(products)
         # print(s, ':', products)
 
+        bar.set_description(product_code)
+
     js = json.dumps(dizi, ensure_ascii=False, indent=4)
 
-    with open("test-2.json", "w", encoding='utf-8') as outfile:
+    with open("test.json", "w", encoding='utf-8') as outfile:
         outfile.write(js)
     print(dizi)
 
 
 def jsonProductLink(s=0):
-    f = open('test-2.json', encoding='utf-8')
+    f = open('test.json', encoding='utf-8')
     data = json.load(f)
     url = data['products'][s]['url']
     return url

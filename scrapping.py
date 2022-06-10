@@ -7,11 +7,12 @@ from tqdm import tqdm, trange, tqdm_notebook
 import getUrl
 
 
-def jsonProductLink(s=0):
-    f = open('test-2.json', encoding='utf-8')
+def jsonData(s=0):
+    f = open('test.json', encoding='utf-8')
     data = json.load(f)
     url = data[s]['url']
-    return url
+    categories = data[s]['categories']
+    return [url, categories]
 
 
 def pageSource(url):
@@ -20,14 +21,14 @@ def pageSource(url):
     return page
 
 
-def test():
+def productData():
     dizi = []
     # s = 0
     i = getUrl.num_found()
     try:
         # while s <= i:
         for s in tqdm(range(i), desc='loading...', colour='#00ff0a'):
-            url = jsonProductLink(s)
+            url = jsonData(s)[0]
             page = pageSource(url)
             # print(url)
             img_list = []
@@ -37,6 +38,7 @@ def test():
                 'name': '',
                 'code': '',
                 'ean': '',
+                'categories': '',
                 'color': '',
                 'price': '',
                 'description': '',
@@ -50,6 +52,7 @@ def test():
             product_code = page.find('div', attrs={'class': 'product-box__tableCell--value'}).getText()
             ean_code = page.select_one(
                 'div > div.product-box__table > div:nth-child(2) > div.product-box__tableCell.product-box__tableCell--value').text
+
             try:
                 product_color = page.select_one(
                     'div > div.product-box__table > div:nth-child(3) > div.product-box__tableCell.product-box__tableCell--value').text.strip().title()
@@ -86,6 +89,7 @@ def test():
             product_dict['name'] = product_name
             product_dict['code'] = product_code
             product_dict['ean'] = ean_code
+            product_dict['categories'] = jsonData(s)[1]
             product_dict['color'] = product_color
             product_dict['price'] = product_price
             product_dict['description'] = desc
@@ -107,4 +111,4 @@ def test():
 
 
 if __name__ == '__main__':
-    test()
+    productData()
