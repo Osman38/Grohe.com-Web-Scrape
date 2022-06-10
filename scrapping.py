@@ -23,11 +23,9 @@ def pageSource(url):
 
 def productData():
     dizi = []
-    # s = 0
     i = getUrl.num_found()
     try:
-        # while s <= i:
-        for s in tqdm(range(3), desc='loading...', colour='#00ff0a'):
+        for s in tqdm(range(i), desc='loading...', colour='#00ff0a'):
             url = jsonData(s)[0]
             page = pageSource(url)
             # print(url)

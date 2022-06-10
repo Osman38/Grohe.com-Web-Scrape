@@ -19,21 +19,12 @@ def num_found():
     return x
 
 
-def getJsonData():
-    x = requests.get(main_url(limit=num_found(), rows=num_found()))
-    x = x.text
-    with open("test.json", "w", encoding='utf-8') as outfile:
-        outfile.write(x)
-    return 'Success Full'
-
-
 def productData():
     base_url = 'https://www.grohe.com.tr/tr_tr/'
     # s = [200, 240]
-    bar = tqdm(range(4), colour='#18f763', unit=' loading...')
+    bar = tqdm(range(num_found()), colour='#18f763', unit=' loading...')
     dizi = []
     for s in bar:
-
         products = {
             'index': '',
             'displayName': '',
@@ -55,11 +46,8 @@ def productData():
         product_categories = x['category']
         product_name = x['modelName']
         name_url = urllib.parse.quote(x['modelName'], safe="'")
-
-        # print(product_name)
         product_code = x['code']
         url = base_url + serial_name + '-' + name_url + '-' + product_code + '.html'
-        # print(url)
         products['index'] = s
         products['displayName'] = serial_name
         products['modelName'] = product_name
@@ -67,17 +55,14 @@ def productData():
         products['code'] = product_code
         products['url'] = urllib.parse.quote(url, safe='://')
         dizi.append(products)
-        # print(s, ':', products)
-
         bar.set_description(product_code)
+    # fname -> Specify new filename
     jsonWrite('', dizi)
     print(dizi)
 
 
-# fname -> Specify new filename
 def jsonWrite(fname, data):
     js = json.dumps(data, ensure_ascii=False, indent=4)
-
     with open(f"{fname}.json", "w", encoding='utf-8') as outfile:
         outfile.write(js)
 
