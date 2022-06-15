@@ -6,7 +6,6 @@ import urllib.parse
 from bs4 import BeautifulSoup
 from tqdm import tqdm
 
-# Test
 
 def main_url(limit=1000, rows=1, start=0):
     url = f'https://www.grohe.com.tr/solr/master_tr_TR_Product/select?defType=edismax&facet.limit={limit}&facet.mincount=1&facet.query=bim:*&facet.query=-bim:*&fl=modelName,category,communicationDesign,pl_displayName,code&fq=(b2cAssortment:true OR b2bAssortment:true) AND category:Washbasin&indent=true&q=*:*&qf=code^40.0 communicationDesign^20.0 fulltext webSiteEndUserShort claim&rows={rows}&sort=pl_displayName asc&start={start}&wt=json'
