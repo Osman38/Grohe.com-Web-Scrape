@@ -1,8 +1,0 @@
--Tüm ürünler çekilecek
--Kategoriler düzenlenecek
--kategorilere göre ürünler tekrardan düzenlenecek
--Tüm listeler veritabanına aktarılacak
--Ürün listeleme api servisleri oluşturulacak
--Ürün ekleme, güncelleme ve silme api servisleri oluşturulacak
--FrontEnd Tasarım kodlaması yapılacak
--BackEnd ile api Entegrasyonu ile ürün listelenecek.
