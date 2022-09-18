@@ -19,9 +19,14 @@ def num_found():
     return x
 
 
+def jsonWrite(fname, data):
+    js = json.dumps(data, ensure_ascii=False, indent=4)
+    with open(f"{fname}.json", "w", encoding='utf-8') as outfile:
+        outfile.write(js)
+
+
 def productData():
     base_url = 'https://www.grohe.com.tr/tr_tr/'
-    # s = [200, 240]
     bar = tqdm(range(num_found()), colour='#18f763', unit=' loading...')
     dizi = []
     for s in bar:
@@ -57,14 +62,8 @@ def productData():
         dizi.append(products)
         bar.set_description(product_code)
     # fname -> Specify new filename
-    jsonWrite('', dizi)
+    jsonWrite('newUrl.json', dizi)
     print(dizi)
-
-
-def jsonWrite(fname, data):
-    js = json.dumps(data, ensure_ascii=False, indent=4)
-    with open(f"{fname}.json", "w", encoding='utf-8') as outfile:
-        outfile.write(js)
 
 
 if __name__ == '__main__':

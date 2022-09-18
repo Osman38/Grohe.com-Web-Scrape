@@ -103,7 +103,7 @@ def productData():
     except IndexError:
         pass
 
-    getUrl.jsonWrite(fname='', data=dizi)
+    getUrl.jsonWrite(fname='newJson', data=dizi)
 
 
 if __name__ == '__main__':
