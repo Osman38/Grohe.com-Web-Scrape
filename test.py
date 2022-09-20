@@ -1,20 +1,61 @@
 import json
+import time
 
-import requests
-from bs4 import BeautifulSoup
-import urllib.parse as urlparse
+import psycopg2
+
+from psycopg2.extras import RealDictCursor
 
 
-def test():
-    url = 'https://www.grohe.com.tr/solr/master_tr_TR_Product/select?defType=edismax&facet.limit=1000&fl=pl_displayName,communicationDesign,modelName,code,category&fq=(b2cAssortment:true OR b2bAssortment:true) AND category:(Shower OR 005-SH-0560-G480_master_en_Product OR 005-SH-0560-G505_master_en_Product OR 005-SH-0560-G506_master_en_Product)&q=*:*&qf=code^40.0 communicationDesign^20.0 fulltext webSiteEndUserShort claim&rows=20&sort=pl_displayName asc&start=0&wt=json'
-    parsed = urlparse.urlparse(url)
-    x = urlparse.parse_qs(parsed.query)['fq'][0].translate(str.maketrans({
-        '(': '',
-        ')': ''
-    })).split(sep=':')
+def connection(host, database, user, password):
+    while True:
 
-    print(x)
+        try:
+            conn = psycopg2.connect(host=host, database=database, user=user, password=password)
+            conn.autocommit = True
+            cursor = conn.cursor()
+            # print('DB Connection : Database connection was successfull')
+            return cursor
+            # break
+        except Exception as error:
+            print('DB Connection : Connecting to database failed')
+            print('Error : ', error)
+            time.sleep(2)
+
+
+def insertData():
+    file = open('newJson.json', encoding='utf8')
+    x = json.load(file)
+    # s= 75
+    for s in range(len(x)):
+        product_url = x[s]['url']
+        product_name = x[s]['name']
+        product_code = x[s]['code']
+        ean = x[s]['ean']
+        category = x[s]['categories']
+        color = x[s]['color']
+        price = x[s]['price']
+        description = str(x[s]['description'])
+        features = x[s]['features']
+        image = x[s]['images']
+        z = connection(host='localhost',database='products',user='postgres',password='123456')
+        insert_data = "insert into products (product_url,name,product_code,ean,category,color,price,description,features,image) values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+        if price == 'Null':
+            price = 0
+        else:
+            price = price.replace('.', '').replace(',', '.')
+        data = (product_url, product_name, product_code, ean, category, color, price,
+                description, features, image)
+        z.execute(insert_data, data)
+
+        print(s)
+
+
+def testQuery():
+    x = connection(host='localhost',database='products',user='postgres',password='123456')
+    x.execute("select * from products WHERE product_code='22037DA0'")
+    y = x.fetchall()
+    print(y)
 
 
 if __name__ == '__main__':
-    test()
+    testQuery()

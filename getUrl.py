@@ -62,7 +62,7 @@ def productData():
         dizi.append(products)
         bar.set_description(product_code)
     # fname -> Specify new filename
-    jsonWrite('newUrl.json', dizi)
+    jsonWrite('newUrl', dizi)
     print(dizi)
 
 

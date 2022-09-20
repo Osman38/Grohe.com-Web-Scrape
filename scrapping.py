@@ -8,7 +8,7 @@ import getUrl
 
 
 def jsonData(s=0):
-    f = open('test.json', encoding='utf-8')
+    f = open('newUrl.json', encoding='utf-8')
     data = json.load(f)
     url = data[s]['url']
     categories = data[s]['categories']
